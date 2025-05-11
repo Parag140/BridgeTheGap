@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Flask User Authentication System :
 
 This project is a Flask-based web application that implements a user registration and login system.
@@ -89,3 +90,6 @@ flask-user-authentication/
 Developed by Shaik Faheem Ahamad
 
 
+=======
+# BridgeTheGap
+>>>>>>> 168ce27d5d463561bfbe0313c86a3c909af91fa4
