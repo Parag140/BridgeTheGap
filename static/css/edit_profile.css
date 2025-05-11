@@ -1,0 +1,102 @@
+
+:root {
+    --primary: #00f7ff;
+    --secondary: #7b2dff;
+    --dark: #0a0a1a;
+    --light: #e0e0ff;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark);
+    color: var(--light);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-form {
+    background: rgba(20, 20, 40, 0.7);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 247, 255, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(10, 10, 30, 0.5);
+    border: 1px solid rgba(0, 247, 255, 0.3);
+    border-radius: 5px;
+    color: var(--light);
+}
+
+.btn {
+    background: rgba(0, 247, 255, 0.1);
+    color: var(--primary);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: rgba(0, 247, 255, 0.2);
+}
+
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+}
+/* Add this to ensure proper image display */
+.avatar-preview, #profile-avatar {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00ffaa;
+}
+
+/* Add transition for smooth updates */
+.avatar-preview, #profile-avatar {
+    transition: opacity 0.3s ease;
+}
+
+.avatar-preview.updating, #profile-avatar.updating {
+    opacity: 0.7;
+}
+.updating {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-20px) translateX(10px); }
+    100% { transform: translateY(0) translateX(0); }
+}

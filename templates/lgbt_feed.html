@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LGBTQ+ Nexus | Futuristic Social Network</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lgbt_feed.css') }}">
+
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Cyberpunk Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">LGBTQ+NEXUS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'feed' %}active{% endif %}" href="{{ url_for('feed') }}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if category == 'lgbt' %}active{% endif %}" href="{{ url_for('communities', category='lgbt') }}">
+                            <i class="fas fa-users me-1"></i> Communities
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'lgbt_feed' %}active{% endif %}" href="{{ url_for('lgbt_feed') }}">
+                            <i class="fas fa-rainbow me-1"></i> LGBTQ+
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if category == 'lgbt' %}active{% endif %}" href="{{ url_for('events', category='lgbt') }}">
+                            <i class="fas fa-calendar-alt me-1"></i> Events
+                        </a>
+                    </li>
+                </ul>
+                <form class="d-flex me-2">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search Nexus..." aria-label="Search" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white;">
+                        <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <img src="https://via.placeholder.com/40/0d0221/ffffff?text=USER" class="rounded-circle me-2" alt="Profile">
+                            <span>CyberUser</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('user_profile', username=session['username']) }}"><i class="fas fa-user-circle me-2"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('edit_profile') }}"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('notifications') }}"><i class="fas fa-bell me-2"></i> Notifications</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="feed-container">
+        <!-- Futuristic Header -->
+        <div class="community-header">
+            <h1>LGBTQ+ NEXUS</h1>
+            <p>Connect with the queer community in this futuristic social space. Share your story, find support, and celebrate diversity in a safe cyber environment.</p>
+        </div>
+        
+        <!-- Community Values -->
+        <div class="community-values">
+            <h3><i class="fas fa-stars me-2"></i>OUR CORE VALUES</h3>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Safe Space</h4>
+                    <p>A zero-tolerance policy for discrimination where all identities are respected and celebrated.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-heart"></i>
+                    <h4>Inclusivity</h4>
+                    <p>All gender identities and sexual orientations are welcome and valid in our community.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-lock-open"></i>
+                    <h4>Authenticity</h4>
+                    <p>Be your true self without fear of judgment in this digital sanctuary.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <h4>Support</h4>
+                    <p>A network of care and understanding for all members of the LGBTQ+ spectrum.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feed Tabs -->
+        <div class="feed-tabs">
+            <div class="feed-tab active"><i class="fas fa-globe me-2"></i>Global Feed</div>
+            <div class="feed-tab"><i class="fas fa-users me-2"></i>Local</div>
+            <div class="feed-tab"><i class="fas fa-star me-2"></i>Featured</div>
+            <div class="feed-tab"><i class="fas fa-calendar me-2"></i>Events</div>
+            <div class="feed-tab"><i class="fas fa-question-circle me-2"></i>Support</div>
+        </div>
+        
+        <!-- Create Post -->
+        <div class="card-futuristic create-post">
+            <div class="post-header">
+                <img src="https://via.placeholder.com/50/0d0221/ffffff?text=YOU" alt="User" class="post-avatar">
+                <div class="post-user-info">
+                    <a href="#">Your Profile</a>
+                    <small>Share with the community</small>
+                </div>
+            </div>
+            
+            <div class="post-content">
+                <form>
+                    <textarea class="form-control" rows="3" placeholder="Broadcast your thoughts to the queer collective..."></textarea>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <input type="file" id="post-image" class="d-none" accept="image/*,video/*">
+                            <label for="post-image" class="btn btn-upload btn-sm me-2">
+                                <i class="fas fa-image"></i> Media
+                            </label>
+                            <input type="file" id="post-video" class="d-none" accept="video/*">
+                            <label for="post-video" class="btn btn-upload btn-sm me-2">
+                                <i class="fas fa-video"></i> Video
+                            </label>
+                            <span id="file-name" class="text-muted small"></span>
+                        </div>
+                        <button type="submit" class="btn btn-post">Transmit <i class="fas fa-paper-plane ms-1"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Posts -->
+        <div class="posts-container">
+            <!-- Sample Post 1 -->
+            <div class="card-futuristic">
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/50/ff2a6d/ffffff?text=AX" alt="User" class="post-avatar">
+                    <div class="post-user-info">
+                        <a href="#">AlexXenon</a>
+                        <small>2.4 cycles ago • <i class="fas fa-globe-americas"></i> Public</small>
+                    </div>
+                    <div class="ms-auto">
+                        <i class="fas fa-ellipsis-h" style="color: var(--text-secondary); cursor: pointer;"></i>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <p>Just attended the Neo-Queer Pride 2045 in the digital metaverse! The cyber-parade was absolutely mind-blowing with holographic floats and AI-powered drag performances. Who else was there? #NeoPride #QueerFuture</p>
+                    <img src="https://via.placeholder.com/600x400/0d0221/ff2a6d?text=Neo+Pride+2045" alt="Post image" class="post-image">
+                </div>
+                
+                <div class="post-actions">
+                    <button class="action-btn like-btn liked" data-post-id="1">
+                        <i class="fas fa-heart"></i> <span class="like-count">142</span>
+                    </button>
+                    <button class="action-btn comment-btn" data-post-id="1">
+                        <i class="fas fa-comment"></i> 28
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+                
+                <div class="comments-section" id="comments-1">
+                    <div class="comment">
+                        <img src="https://via.placeholder.com/40/05d9e8/ffffff?text=QJ" alt="User" class="comment-avatar">
+                        <div class="comment-content">
+                            <strong>QuantumJay</strong>
+                            <p>The neural-link experience was incredible! I could feel the music vibrating in my consciousness.</p>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <img src="https://via.placeholder.com/40/d300c5/ffffff?text=NP" alt="User" class="comment-avatar">
+                        <div class="comment-content">
+                            <strong>NeonPulse</strong>
+                            <p>That bio-luminescent drag queen with the nanotech costume was EVERYTHING! ✨</p>
+                        </div>
+                    </div>
+                    
+                    <form class="add-comment" data-post-id="1">
+                        <input type="text" placeholder="Add to the conversation...">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Sample Post 2 -->
+            <div class="card-futuristic">
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/50/00ff9d/0d0221?text=JT" alt="User" class="post-avatar">
+                    <div class="post-user-info">
+                        <a href="#">JamieTesseract</a>
+                        <small>5.7 cycles ago • <i class="fas fa-user-friends"></i> Community</small>
+                    </div>
+                    <div class="ms-auto">
+                        <i class="fas fa-ellipsis-h" style="color: var(--text-secondary); cursor: pointer;"></i>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <p>Just launched my new project "Queer Code Collective" - an open-source initiative to teach programming to LGBTQ+ youth through interactive holographic tutorials. Looking for mentors! #QueerTech #FutureCoders</p>
+                    <img src="https://via.placeholder.com/600x400/0d0221/00ff9d?text=Queer+Code+Collective" alt="Post image" class="post-image">
+                </div>
+                
+                <div class="post-actions">
+                    <button class="action-btn like-btn" data-post-id="2">
+                        <i class="fas fa-heart"></i> <span class="like-count">89</span>
+                    </button>
+                    <button class="action-btn comment-btn" data-post-id="2">
+                        <i class="fas fa-comment"></i> 14
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+                
+                <div class="comments-section" id="comments-2" style="display: none;">
+                    <div class="comment">
+                        <img src="https://via.placeholder.com/40/f9f002/0d0221?text=RB" alt="User" class="comment-avatar">
+                        <div class="comment-content">
+                            <strong>RayBinary</strong>
+                            <p>This is amazing! I'm a senior dev at NeuroSoft, would love to volunteer.</p>
+                        </div>
+                    </div>
+                    
+                    <form class="add-comment" data-post-id="2">
+                        <input type="text" placeholder="Add to the conversation...">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Sample Post 3 -->
+            <div class="card-futuristic">
+                <div class="post-header">
+                    <img src="https://via.placeholder.com/50/d300c5/ffffff?text=SP" alt="User" class="post-avatar">
+                    <div class="post-user-info">
+                        <a href="#">SynthPrism</a>
+                        <small>8.2 cycles ago • <i class="fas fa-globe-americas"></i> Public</small>
+                    </div>
+                    <div class="ms-auto">
+                        <i class="fas fa-ellipsis-h" style="color: var(--text-secondary); cursor: pointer;"></i>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <p>Friendly reminder that gender is a social construct and your identity is valid regardless of how you choose to express it in this digital age. The future is fluid! 💫 #GenderNebula #BeyondBinary</p>
+                </div>
+                
+                <div class="post-actions">
+                    <button class="action-btn like-btn liked" data-post-id="3">
+                        <i class="fas fa-heart"></i> <span class="like-count">327</span>
+                    </button>
+                    <button class="action-btn comment-btn" data-post-id="3">
+                        <i class="fas fa-comment"></i> 42
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+                
+                <div class="comments-section" id="comments-3" style="display: none;">
+                    <div class="comment">
+                        <img src="https://via.placeholder.com/40/ff2a6d/ffffff?text=AX" alt="User" class="comment-avatar">
+                        <div class="comment-content">
+                            <strong>AlexXenon</strong>
+                            <p>Needed this today. My neural implant has been glitching with dysphoria waves.</p>
+                        </div>
+                    </div>
+                    
+                    <form class="add-comment" data-post-id="3">
+                        <input type="text" placeholder="Add to the conversation...">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Load More -->
+        <div class="d-grid mt-4">
+            <button class="btn btn-outline-light" style="border-radius: 12px; border: 1px solid var(--neon-blue); color: var(--neon-blue);">
+                <i class="fas fa-sync-alt me-2"></i> Load More
+            </button>
+        </div>
+    </div> <!-- End of feed-container -->
+
+    <!-- Footer (Optional) -->
+    <footer class="text-center text-light mt-5 mb-3" style="font-size: 0.9rem;">
+        <p>© 2045 LGBTQ+ Nexus | Embracing Diversity in Every Universe</p>
+    </footer>
+
+    <!-- Optionally include Bootstrap JS and custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Optionally include your particles.js or any other background effect -->
+    <script src="path/to/particles.min.js"></script>
+    <script src="{{ url_for('static', filename='js/lgbt_feed.js') }}"></script>
+</body>
+</html>

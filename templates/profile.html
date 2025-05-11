@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXUS PROFILE | {{ user.username }}</title>
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/profile.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Floating particles -->
+    <div id="particles"></div>
+
+    <div class="container">
+      <header class="header">
+        <h1>NEXUS NETWORK</h1>
+        <nav>
+          <a href="{{ url_for('feed') }}"><i class="fas fa-home"></i> FEED</a>
+          <a href="{{ url_for('user_profile', username=session['username']) }}"
+            ><i class="fas fa-user"></i> PROFILE</a
+          >
+          <a href="{{ url_for('notifications') }}"
+            ><i class="fas fa-bell"></i> ALERTS</a
+          >
+          <a href="{{ url_for('logout') }}"
+            ><i class="fas fa-power-off"></i> LOGOUT</a
+          >
+        </nav>
+      </header>
+
+      <div class="profile-header">
+        <img
+          src="{{ url_for('static', filename='uploads/profile/' + user.avatar) }}?v={{ session.get('avatar_updated', '') }}"
+          alt="{{ user.username }}"
+          class="profile-avatar"
+          id="profile-avatar"
+        />
+        <div class="profile-info">
+          <h2>{{ user.username }}</h2>
+          {% if user.name %}
+          <p><i class="fas fa-id-card"></i> {{ user.name }}</p>
+          {% endif %} {% if user.bio %}
+          <p><i class="fas fa-quote-left"></i> {{ user.bio }}</p>
+          {% endif %} {% if user.location %}
+          <p><i class="fas fa-map-marker-alt"></i> {{ user.location }}</p>
+          {% endif %} {% if user.website %}
+          <p>
+            <i class="fas fa-link"></i>
+            <a href="{{ user.website }}" target="_blank">{{ user.website }}</a>
+          </p>
+          {% endif %}
+
+          <div class="profile-stats">
+            <span
+              ><i class="fas fa-broadcast-tower"></i> {{ posts|length }}
+              TRANSMISSIONS</span
+            >
+            <span
+              ><i class="fas fa-users"></i> {{ follower_count }} FOLLOWERS</span
+            >
+            <span
+              ><i class="fas fa-user-plus"></i> {{ following_count }}
+              CONNECTIONS</span
+            >
+          </div>
+
+          {% if user.username != session['username'] %}
+          <form
+            method="POST"
+            action="{{ url_for('follow_user', user_id=user._id) }}"
+            class="follow-form"
+          >
+            <button
+              type="submit"
+              class="btn {% if is_following %}btn-secondary{% endif %}"
+            >
+              {% if is_following %}<i class="fas fa-user-check"></i> CONNECTED{%
+              else %}<i class="fas fa-user-plus"></i> CONNECT{% endif %}
+            </button>
+          </form>
+          {% else %}
+          <a href="{{ url_for('edit_profile') }}" class="btn"
+            ><i class="fas fa-cog"></i> CONFIGURE PROFILE</a
+          >
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="profile-posts">
+        <h3><i class="fas fa-broadcast-tower"></i> RECENT TRANSMISSIONS</h3>
+        <div class="posts-grid">
+          {% for post in posts %}
+          <!-- Inside your posts loop in profile.html -->
+          <div
+            class="post-thumbnail"
+            style="animation: fadeIn {{ 0.2 * loop.index }}s ease-out"
+          >
+            {% if post.user_id|string == session['user_id'] or
+            session.get('role') == 'admin' %}
+            <form
+              method="POST"
+              action="{{ url_for('delete_post', post_id=post._id) }}"
+              class="delete-form-thumbnail"
+            >
+              <button
+                type="submit"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this post?')"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
+            {% endif %}
+            <a href="{{ url_for('feed') }}#post-{{ post._id }}">
+              {% if post.image %}
+              <img
+                src="{{ url_for('static', filename='uploads/posts/' + post.image) }}"
+                alt="Post image"
+              />
+              {% else %}
+              <div class="text-post">{{ post.content|truncate(50) }}</div>
+              {% endif %}
+            </a>
+          </div>
+          {% else %}
+          <div class="no-posts">
+            <p>No transmissions yet. Start sharing your thoughts!</p>
+            {% if user.username == session['username'] %}
+            <a
+              href="{{ url_for('create_post') }}"
+              class="btn"
+              style="margin-top: 1rem"
+            >
+              <i class="fas fa-plus"></i> CREATE FIRST POST
+            </a>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+  </body>
+</html>

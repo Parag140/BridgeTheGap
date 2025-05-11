@@ -1,0 +1,266 @@
+{% extends "base_lgbt.html" %}
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="mb-4"><i class="fas fa-calendar-alt me-2"></i> Upcoming Events</h2>
+            
+            <!-- Event Filter -->
+            <div class="card mb-4 glow-effect">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <div class="mb-2 mb-md-0">
+                            <a href="{{ url_for('events') }}" class="btn btn-outline-primary me-2 {% if filter_type == 'upcoming' %}active{% endif %}">
+                                <i class="fas fa-rocket me-1"></i> Upcoming
+                            </a>
+                            <a href="{{ url_for('events', filter='past') }}" class="btn btn-outline-secondary me-2 {% if filter_type == 'past' %}active{% endif %}">
+                                <i class="fas fa-history me-1"></i> Past
+                            </a>
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('events', filter='your') }}" class="btn btn-outline-secondary {% if filter_type == 'your' %}active{% endif %}">
+                                    <i class="fas fa-user-astronaut me-1"></i> Your Events
+                                </a>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('create_event') }}" class="btn btn-primary pulse">
+                            <i class="fas fa-plus me-1"></i> Create Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events List -->
+            {% if events %}
+                {% for event in events %}
+                <div class="card mb-4 fade-in" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                    <div class="row g-0">
+                        <div class="col-md-4 position-relative bg-dark d-flex align-items-center justify-content-center">
+                            <div class="event-date-badge">
+                                <i class="fas fa-calendar-day me-1"></i>{{ event.date.strftime('%b %d, %Y') }}
+                            </div>
+                            {% if event.image %}
+                                <img src="{{ url_for('static', filename='event_images/' + event.image) }}" class="img-fluid h-100" style="object-fit: cover;" alt="{{ event.title }}">
+                            {% else %}
+                                <i class="fas fa-calendar-day event-card-icon"></i>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title mb-1">{{ event.title }}</h5>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge bg-primary me-2">
+                                                <i class="fas fa-users me-1"></i> {{ event.attendees|length }} attending
+                                            </span>
+                                            {% if event.is_featured %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-star me-1"></i> Featured
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="eventDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventDropdown">
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-share-alt me-2"></i>Share</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-bookmark me-2"></i>Save</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-flag me-2"></i>Report</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <p class="card-text text-muted mb-3">
+                                    <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}<br>
+                                    <i class="fas fa-clock me-2"></i>{{ event.start_time.strftime('%I:%M %p') }} - {{ event.end_time.strftime('%I:%M %p') }}
+                                </p>
+                                
+                                <p class="card-text mb-3">{{ event.description|truncate(200) }}</p>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex">
+                                        <div class="avatar-group me-3">
+                                            {% for attendee in event.attendees[:3] %}
+                                                <img src="https://ui-avatars.com/api/?name={{ attendee.username }}&background=random" class="rounded-circle" width="30" height="30" alt="{{ attendee.username }}">
+                                            {% endfor %}
+                                            {% if event.attendees|length > 3 %}
+                                                <span class="small ms-2">+{{ event.attendees|length - 3 }} more</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="fas fa-info-circle me-1"></i> Details
+                                        </a>
+                                        {% if current_user.is_authenticated %}
+                                            {% if current_user in event.attendees %}
+                                                <form action="{{ url_for('unattend_event', event_id=event.id) }}" method="POST" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-user-minus me-1"></i> Leave
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <form action="{{ url_for('attend_event', event_id=event.id) }}" method="POST" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-user-plus me-1"></i> Attend
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        {% else %}
+                                            <a href="{{ url_for('login') }}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-user-plus me-1"></i> Attend
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card text-center py-5 fade-in">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-times fa-4x text-muted mb-4" style="opacity: 0.5;"></i>
+                        <h4 class="mb-3">No Events Found</h4>
+                        <p class="text-muted mb-4">
+                            {% if filter_type == 'upcoming' %}
+                                There are no upcoming events. Be the first to create one!
+                            {% elif filter_type == 'past' %}
+                                No past events found.
+                            {% else %}
+                                You haven't joined any events yet.
+                            {% endif %}
+                        </p>
+                        <a href="{{ url_for('create_event') }}" class="btn btn-primary btn-lg pulse">
+                            <i class="fas fa-plus me-1"></i> Create Event
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+            <nav aria-label="Event pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('events', category=category, page=pagination.prev_num, filter=filter_type) }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    {% endif %}
+                    
+                    {% for page_num in range(1, pagination.pages + 1) %}
+                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('events', category=category, page=page_num, filter=filter_type) }}">{{ page_num }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('events', category=category, page=pagination.next_num, filter=filter_type) }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card mb-4 glow-effect">
+                <div class="card-header">
+                    <h5><i class="fas fa-calendar-check me-2"></i> Your Event Journey</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.is_authenticated and current_user.attended_events %}
+                        <div class="timeline">
+                            {% for event in current_user.attended_events[:5] %}
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex">
+                                    <div class="timeline-badge">
+                                        <i class="fas fa-calendar-day"></i>
+                                    </div>
+                                    <div class="timeline-content ms-3">
+                                        <h6 class="mb-1">{{ event.title }}</h6>
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-clock me-1"></i>{{ event.date.strftime('%b %d, %Y') }}
+                                        </small>
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ event.location }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ url_for('user_events') }}" class="btn btn-sm btn-outline-primary w-100 mt-2">
+                            View All Events
+                        </a>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-calendar-plus fa-2x text-muted mb-3" style="opacity: 0.5;"></i>
+                            <h6>Your Event Journey Awaits</h6>
+                            <p class="small text-muted">
+                                {% if current_user.is_authenticated %}
+                                    You haven't joined any events yet. Explore what's happening!
+                                {% else %}
+                                    <a href="{{ url_for('login') }}" class="text-primary">Sign in</a> to track your events
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mb-4 glow-effect">
+                <div class="card-header">
+                    <h5><i class="fas fa-bullhorn me-2"></i> Trending Categories</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for category in trending_categories %}
+                        <a href="{{ url_for('events', category=category.name) }}" class="badge category-badge bg-dark">
+                            {{ category.name }} ({{ category.count }})
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glow-effect">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line me-2"></i> Event Insights</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="small text-muted mb-2">POPULAR THIS WEEK</h6>
+                        {% for event in popular_events %}
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-fire text-danger me-2"></i>
+                            <div>
+                                <div>{{ event.title }}</div>
+                                <small class="text-muted">{{ event.attendees|length }} attending</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

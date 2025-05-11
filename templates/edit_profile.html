@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Edit Profile - NEXUS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_profile.css') }}">
+</head>
+<body>
+    {% extends "base.html" %}
+
+{% block content %}
+<div class="edit-profile-container">
+    <h1>Edit Profile</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" value="{{ user.username }}" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio">{{ user.bio or '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" value="{{ user.name or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" value="{{ user.location or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="website">Website</label>
+            <input type="url" id="website" name="website" value="{{ user.website or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+                <option value="non-binary" {% if user.gender == 'non-binary' %}selected{% endif %}>Non-binary</option>
+                <option value="transgender" {% if user.gender == 'transgender' %}selected{% endif %}>Transgender</option>
+                <option value="other" {% if user.gender == 'other' or not user.gender %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="pronouns">Pronouns</label>
+            <input type="text" id="pronouns" name="pronouns" value="{{ user.pronouns or '' }}" placeholder="e.g., they/them, she/her, he/him">
+        </div>
+        
+        <div class="form-group">
+            <label for="avatar">Profile Picture</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*">
+            {% if user.avatar %}
+                <img src="{{ url_for('static', filename='uploads/profile/' + user.avatar) }}" alt="Current profile picture" class="current-avatar">
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
+</body>
+</html>

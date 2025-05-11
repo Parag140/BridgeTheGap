@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEONET | Social Feed</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/feed.css') }}"
+    />
+    <style></style>
+  </head>
+  <body>
+    <!-- Floating particles -->
+    <div id="particles"></div>
+
+    <div class="container">
+      <header class="header">
+        <h1>NEONET</h1>
+        <nav>
+          <a href="{{ url_for('feed') }}"><i class="fas fa-home"></i> Feed</a>
+          <a href="{{ url_for('user_profile', username=session['username']) }}"
+            ><i class="fas fa-user"></i> Profile</a
+          >
+          <a href="{{ url_for('notifications') }}"
+            ><i class="fas fa-bell"></i> Notifications</a
+          >
+          <a href="{{ url_for('logout') }}"
+            ><i class="fas fa-sign-out-alt"></i> Logout</a
+          >
+        </nav>
+      </header>
+
+      <div class="content">
+        <div class="create-post">
+          <form
+            method="POST"
+            action="{{ url_for('create_post') }}"
+            enctype="multipart/form-data"
+          >
+            <textarea
+              name="content"
+              placeholder="Broadcast to the network..."
+              required
+            ></textarea>
+            <div class="post-actions">
+              <label for="image-upload"
+                ><i class="fas fa-image"></i> Upload Image</label
+              >
+              <input
+                type="file"
+                id="image-upload"
+                name="image"
+                accept="image/*"
+              />
+              <button type="submit" class="btn">
+                <i class="fas fa-paper-plane"></i> Transmit
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="posts">
+          {% for post in posts %}
+          <div class="post">
+            <!-- Inside your post loop in feed.html -->
+            <div class="post-header">
+              <img
+                src="{{ url_for('static', filename='uploads/profile/' + post.user.avatar) }}"
+                alt="{{ post.user.username }}"
+                class="avatar"
+              />
+              <div class="post-user">
+                <a
+                  href="{{ url_for('user_profile', username=post.user.username) }}"
+                  >{{ post.user.username }}</a
+                >
+                <small
+                  >{{ post.created_at.strftime('%b %d, %Y %I:%M %p') }}</small
+                >
+              </div>
+              {% if post.user_id|string == session['user_id'] or
+              session.get('role') == 'admin' %}
+              <form
+                method="POST"
+                action="{{ url_for('delete_post', post_id=post._id) }}"
+                class="delete-form"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-danger"
+                  onclick="return confirm('Are you sure you want to delete this post?')"
+                >
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </form>
+              {% endif %}
+            </div>
+            <div class="post-content">
+              <p>{{ post.content }}</p>
+              {% if post.image %}
+              <img
+                src="{{ url_for('static', filename='uploads/posts/' + post.image) }}"
+                alt="Post image"
+                class="post-image"
+              />
+              {% endif %}
+            </div>
+            <div class="post-actions">
+              <form
+                method="POST"
+                action="{{ url_for('like_post', post_id=post._id) }}"
+                class="like-form"
+              >
+                <button
+                  type="submit"
+                  class="btn-like {% if post.is_liked %}liked{% endif %}"
+                >
+                  <i class="fas fa-heart"></i>
+                  <span>{{ post.like_count }}</span>
+                </button>
+              </form>
+              <form
+                method="POST"
+                action="{{ url_for('add_comment', post_id=post._id) }}"
+                class="comment-form"
+              >
+                <input
+                  type="text"
+                  name="content"
+                  placeholder="Add response..."
+                  required
+                />
+                <button type="submit" class="btn">
+                  <i class="fas fa-comment-dots"></i>
+                </button>
+              </form>
+            </div>
+            <div class="post-comments">
+              {% for comment in post.comments %}
+              <div class="comment">
+                <img
+                  src="{{ url_for('static', filename='uploads/profile/' + comment.user.avatar) }}"
+                  alt="{{ comment.user.username }}"
+                  class="avatar"
+                />
+                <div class="comment-content">
+                  <a
+                    href="{{ url_for('user_profile', username=comment.user.username) }}"
+                    >{{ comment.user.username }}</a
+                  >
+                  <p>{{ comment.content }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/feed.js') }}"></script>
+  </body>
+</html>

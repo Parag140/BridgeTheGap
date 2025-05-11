@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Future Interface</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+       
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p>{{ stats.users }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Posts</h3>
+                <p>{{ stats.posts }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Comments</h3>
+                <p>{{ stats.comments }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Sessions</h3>
+                <p>{{ stats.active_sessions }}</p>
+            </div>
+        </div>
+        
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_users') }}" class="btn">Manage Users</a>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="notifications-container">
+    <h1>Notifications</h1>
+    
+    {% if notifications %}
+        <div class="notifications-list">
+            {% for notification in notifications %}
+                <div class="notification {% if not notification.read %}unread{% endif %}">
+                    <p>{{ notification.message }}</p>
+                    <small>{{ notification.created_at|datetimeformat }}</small>
+                    {% if notification.link %}
+                        <a href="{{ notification.link }}" class="notification-link">View</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-notifications">You have no notifications.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-4"><i class="fas fa-users me-2"></i> Communities</h2>
+            
+            <!-- Search Bar -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search communities..." aria-label="Search">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Your Communities -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-user-friends me-2"></i> Your Communities</h5>
+                </div>
+                <div class="card-body">
+                    {% if user_communities %}
+                        <div class="row">
+                            {% for community in user_communities %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <i class="{{ community.icon }} fa-2x me-3 text-primary"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="card-title">{{ community.name }}</h5>
+                                                <p class="card-text text-muted">{{ community.members }} members</p>
+                                                <a href="#" class="btn btn-sm btn-outline-primary">Visit Community</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                            <h5>You haven't joined any communities yet</h5>
+                            <p class="text-muted">Discover and join communities below</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Popular Communities -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-fire me-2"></i> Popular Communities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for community in popular_communities %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <i class="{{ community.icon }} fa-2x me-3 text-primary"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="card-title">{{ community.name }}</h5>
+                                            <p class="card-text text-muted">{{ community.members }} members</p>
+                                            <button class="btn btn-sm btn-primary">Join Community</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-plus-circle me-2"></i> Create Community</h5>
+                </div>
+                <div class="card-body">
+                    <p>Start your own community and connect with like-minded people.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#createCommunityModal">
+                        Create New Community
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-bell me-2"></i> Community Updates</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small class="text-muted">3 days ago</small>
+                            </div>
+                            <p class="mb-1">New discussion in Tech Enthusiasts: "Latest Python frameworks"</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small class="text-muted">1 week ago</small>
+                            </div>
+                            <p class="mb-1">Music Fans community reached 2,000 members!</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Community Modal -->
+<div class="modal fade" id="createCommunityModal" tabindex="-1" aria-labelledby="createCommunityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCommunityModalLabel">Create New Community</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="communityName" class="form-label">Community Name</label>
+                        <input type="text" class="form-control" id="communityName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="communityDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="communityDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Community Type</label>
+                        <select class="form-select">
+                            <option selected>Public (Anyone can join)</option>
+                            <option>Private (Requires approval)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Create Community</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

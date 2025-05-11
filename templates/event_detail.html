@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                {% if event.image %}
+                <img src="{{ url_for('static', filename='event_images/' + event.image) }}" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h2 class="card-title mb-1">{{ event.title }}</h2>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-primary me-2">
+                                    <i class="fas fa-users me-1"></i> {{ event.attendees|length }} attending
+                                </span>
+                                <span class="badge bg-secondary me-2">
+                                    <i class="fas fa-tag me-1"></i> {{ event.category }}
+                                </span>
+                                {% if event.is_featured %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-star me-1"></i> Featured
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="eventDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-share-alt me-2"></i>Share</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-bookmark me-2"></i>Save</a></li>
+                                {% if current_user == event.organizer %}
+                                <li><a class="dropdown-item" href="{{ url_for('edit_event', event_id=event.id) }}"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('delete_event', event_id=event.id) }}" onclick="return confirm('Are you sure you want to delete this event?')"><i class="fas fa-trash me-2"></i>Delete</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-flag me-2"></i>Report</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card bg-dark mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-calendar-day me-2"></i>Date & Time</h6>
+                                    <p class="card-text">
+                                        {{ event.date.strftime('%A, %B %d, %Y') }}<br>
+                                        {{ event.start_time.strftime('%I:%M %p') }} - {{ event.end_time.strftime('%I:%M %p') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-map-marker-alt me-2"></i>Location</h6>
+                                    <p class="card-text">{{ event.location }}</p>
+                                    {% if event.location.startswith('http') %}
+                                    <a href="{{ event.location }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">Join Online</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="mb-3">About This Event</h5

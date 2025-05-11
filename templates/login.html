@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  
+</head>
+<body>
+    <!-- Floating particles -->
+    <div id="particles"></div>
+    
+    <!-- Scan line effect -->
+    <div class="scanline"></div>
+    
+    <div class="container">
+        <div class="auth-form">
+            <h2 class="glitch" data-text="SYSTEM ACCESS"><i class="fas fa-fingerprint"></i> SYSTEM ACCESS</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('login') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user-tag"></i> USER IDENTIFIER</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your neural ID">
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> ENCRYPTION KEY</label>
+                    <input type="password" id="password" name="password" required placeholder="Input your security sequence">
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-unlock"></i> INITIATE ACCESS
+                </button>
+            </form>
+            <p>UNREGISTERED ENTITY? <a href="{{ url_for('register') }}">REQUEST CLEARANCE</a></p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

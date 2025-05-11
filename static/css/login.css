@@ -1,0 +1,281 @@
+:root {
+    --primary: #0ff0fc;
+    --secondary: #ff2a6d;
+    --accent: #f5d300;
+    --dark: #0a0a12;
+    --darker: #050508;
+    --light: #e0e0e8;
+}
+
+body {
+    background-color: var(--darker);
+    color: var(--light);
+    font-family: 'Orbitron', 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-100px) translateX(20px); }
+    100% { transform: translateY(0) translateX(0); }
+}
+
+.scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.auth-form {
+    background: rgba(10, 10, 20, 0.8);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 30px rgba(0, 255, 252, 0.2),
+                0 0 60px rgba(0, 255, 252, 0.1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.auth-form::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(0, 255, 252, 0.1) 50%,
+        transparent 55%
+    );
+    animation: shine 6s infinite linear;
+    z-index: -1;
+}
+
+@keyframes shine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.auth-form h2 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-shadow: 0 0 10px rgba(0, 255, 252, 0.5);
+    letter-spacing: 2px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: rgba(20, 20, 30, 0.7);
+    border: 1px solid rgba(0, 255, 252, 0.3);
+    border-radius: 4px;
+    color: var(--light);
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 255, 252, 0.5);
+    background: rgba(20, 20, 30, 0.9);
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary), #00c8d4);
+    border: none;
+    border-radius: 4px;
+    color: var(--dark);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #00e1f0, var(--primary));
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 252, 0.4);
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 55%
+    );
+    transform: rotate(30deg);
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.btn:hover::after {
+    animation: shine 1.5s infinite;
+    opacity: 1;
+}
+
+.auth-form p {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--light);
+}
+
+.auth-form a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.auth-form a:hover {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(245, 211, 0, 0.5);
+}
+
+.alert {
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.alert i {
+    margin-right: 0.5rem;
+}
+
+.alert-success {
+    background: rgba(5, 255, 161, 0.1);
+    border: 1px solid #05ffa1;
+    color: #05ffa1;
+}
+
+.alert-error {
+    background: rgba(255, 56, 100, 0.1);
+    border: 1px solid #ff3864;
+    color: #ff3864;
+}
+
+.keypress-char {
+    position: absolute;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.error-message {
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    background: rgba(255, 56, 100, 0.1);
+    border: 1px solid #ff3864;
+    color: #ff3864;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Cyberpunk glitch effect */
+.glitch {
+    position: relative;
+}
+
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.glitch::before {
+    color: #0ff;
+    z-index: -1;
+    animation: glitch-effect 3s infinite;
+}
+
+.glitch::after {
+    color: #f0f;
+    z-index: -2;
+    animation: glitch-effect 2s infinite reverse;
+}
+
+@keyframes glitch-effect {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(-3px, -3px); }
+    60% { transform: translate(3px, 3px); }
+    80% { transform: translate(3px, -3px); }
+    100% { transform: translate(0); }
+}
